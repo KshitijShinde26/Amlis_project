@@ -113,6 +113,7 @@ The `feature_engineering.py` module generates 13 numerical features without modi
 ## 12. Environment Variables and Configuration
 *   **Backend:** Configuration is handled in `backend/app/config.py`. 
     *   `DATABASE_URL`: Defaults to `sqlite:///./smart_attendance.db`.
+        *   **Separating Test Data:** To prevent polluting your development database with test data, you can override the database URL using an environment variable. For example: `export DATABASE_URL="sqlite:///./test_attendance.db"` (Linux/Mac) or `$env:DATABASE_URL="sqlite:///./test_attendance.db"` (Windows PowerShell) before starting Uvicorn.
     *   `SECRET_KEY`: Can be overridden via environment variables.
 *   **Frontend:** The API base URL is statically configured in `frontend/src/services/api.js` as `http://localhost:8000/api`.
 

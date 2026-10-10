@@ -1,0 +1,15 @@
+# SQLite databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Exceptions for intended versioned scripts
+!*.sql
+
+# Virtual environments and python cache
+venv/
+__pycache__/
+*.pyc
