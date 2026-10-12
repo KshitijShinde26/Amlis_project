@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { uploadAttendanceFile, getSampleDatasetUrl } from '../services/api';
-import { Upload, FileText, Download, CheckCircle2, AlertCircle, Play } from 'lucide-react';
+import { uploadAttendanceFile, getSampleDatasetUrl, getTemplateDatasetUrl } from '../services/api';
+import { Upload, FileText, Download, CheckCircle2, AlertCircle, Play, AlertTriangle } from 'lucide-react';
 
 const UploadData = () => {
   const [file, setFile] = useState(null);
@@ -105,15 +105,25 @@ const UploadData = () => {
               )}
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
-              <a 
-                href={getSampleDatasetUrl()}
-                download="sample_attendance.csv"
-                className="btn btn-secondary"
-                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-              >
-                <Download size={16} /> Download Sample Dataset (CSV)
-              </a>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <a 
+                  href={getTemplateDatasetUrl()}
+                  download="template_attendance.csv"
+                  className="btn btn-secondary"
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  <Download size={16} /> Download Blank Template (CSV)
+                </a>
+                <a 
+                  href={getSampleDatasetUrl()}
+                  download="sample_attendance.csv"
+                  className="btn btn-secondary"
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  <Download size={16} /> Download Sample Dataset
+                </a>
+              </div>
 
               <button 
                 type="submit" 
@@ -154,15 +164,42 @@ const UploadData = () => {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 <CheckCircle2 size={22} color="#059669" />
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 700 }}>Dataset Successfully Uploaded & Validated!</h4>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 700 }}>Dataset Processed & Validated!</h4>
               </div>
               <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>{result.message}</p>
               
-              <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
-                <div><strong>Records Stored:</strong> {result.records_processed}</div>
-                <div><strong>Students Count:</strong> {result.students_count}</div>
-                <div><strong>Subjects Count:</strong> {result.subjects_count}</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', fontSize: '0.875rem', marginBottom: '1.25rem', backgroundColor: '#ffffff', padding: '0.75rem', borderRadius: 8, border: '1px solid #d1fae5' }}>
+                <div><span style={{ color: '#64748b', fontSize: '0.75rem', display: 'block' }}>Received</span><strong>{result.records_received || result.records_processed}</strong></div>
+                <div><span style={{ color: '#059669', fontSize: '0.75rem', display: 'block' }}>Inserted</span><strong style={{ color: '#059669' }}>{result.records_inserted ?? result.records_processed}</strong></div>
+                <div><span style={{ color: '#d97706', fontSize: '0.75rem', display: 'block' }}>Duplicates Skipped</span><strong style={{ color: '#d97706' }}>{result.duplicates_skipped || 0}</strong></div>
+                <div><span style={{ color: '#dc2626', fontSize: '0.75rem', display: 'block' }}>Invalid Skipped</span><strong style={{ color: '#dc2626' }}>{result.invalid_records_skipped || 0}</strong></div>
+                <div><span style={{ color: '#64748b', fontSize: '0.75rem', display: 'block' }}>Unique Students</span><strong>{result.students_count}</strong></div>
+                <div><span style={{ color: '#64748b', fontSize: '0.75rem', display: 'block' }}>Unique Subjects</span><strong>{result.subjects_count}</strong></div>
               </div>
+
+              {result.warnings && result.warnings.length > 0 && (
+                <div style={{
+                  marginBottom: '1rem',
+                  padding: '0.75rem',
+                  backgroundColor: '#fffbeb',
+                  border: '1px solid #fef3c7',
+                  borderRadius: 6,
+                  color: '#92400e',
+                  fontSize: '0.8rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+                    <AlertTriangle size={15} /> Upload Notices ({result.warnings.length}):
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '1.25rem', maxHeight: 90, overflowY: 'auto' }}>
+                    {result.warnings.slice(0, 5).map((w, i) => (
+                      <li key={i}>{w}</li>
+                    ))}
+                    {result.warnings.length > 5 && (
+                      <li>...and {result.warnings.length - 5} more notices.</li>
+                    )}
+                  </ul>
+                </div>
+              )}
 
               <button 
                 onClick={() => navigate('/anomaly-detection')}

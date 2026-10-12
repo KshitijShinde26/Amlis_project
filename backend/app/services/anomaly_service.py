@@ -50,10 +50,6 @@ def run_database_anomaly_detection(db: Session, contamination: float = 0.10):
     # Run ML Pipeline
     df_results, summary_metrics = run_anomaly_pipeline(raw_df, contamination=contamination)
 
-    # Wipe prior anomaly results to reflect fresh pipeline execution
-    db.query(AnomalyResult).delete()
-    db.commit()
-
     anomaly_objects = []
     for _, row in df_results.iterrows():
         anom_res = AnomalyResult(
@@ -67,8 +63,15 @@ def run_database_anomaly_detection(db: Session, contamination: float = 0.10):
         )
         anomaly_objects.append(anom_res)
 
-    db.bulk_save_objects(anomaly_objects)
-    db.commit()
+    try:
+        # Atomic replacement: wipe prior anomaly results and save new ones in one single transaction
+        db.query(AnomalyResult).delete()
+        if anomaly_objects:
+            db.bulk_save_objects(anomaly_objects)
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
 
     return {
         "status": "success",
