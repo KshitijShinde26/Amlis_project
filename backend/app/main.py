@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -44,11 +45,23 @@ def health_check():
 
 @app.get("/api/dataset/sample")
 def download_sample_dataset():
-    sample_file = "dataset/sample_attendance.csv"
-    if os.path.exists(sample_file):
+    sample_file = Path(__file__).resolve().parent.parent.parent / "dataset" / "sample_attendance.csv"
+    if sample_file.exists():
         return FileResponse(
             path=sample_file,
             filename="sample_attendance.csv",
             media_type="text/csv"
         )
     return {"error": "Sample dataset file not found."}
+
+@app.get("/api/dataset/template")
+def download_template_dataset():
+    template_file = Path(__file__).resolve().parent.parent.parent / "dataset" / "template_attendance.csv"
+    if template_file.exists():
+        return FileResponse(
+            path=template_file,
+            filename="template_attendance.csv",
+            media_type="text/csv"
+        )
+    return {"error": "Template dataset file not found."}
+

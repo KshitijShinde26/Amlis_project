@@ -72,7 +72,7 @@ const Dashboard = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '2rem',
+          marginBottom: '1.5rem',
           boxShadow: '0 10px 20px rgba(49, 46, 129, 0.25)'
         }}>
           <div>
@@ -98,6 +98,39 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+
+        {/* Stale Detection Notice */}
+        {stats?.is_stale && (
+          <div style={{
+            backgroundColor: '#fffbeb',
+            border: '1px solid #fef3c7',
+            borderRadius: 10,
+            padding: '1rem 1.5rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            color: '#92400e'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <AlertTriangle size={22} color="#d97706" />
+              <div>
+                <strong style={{ fontSize: '0.95rem' }}>New Attendance Records Uploaded</strong>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#b45309' }}>
+                  There are {stats.total_records} total records but only {stats.analyzed_records || 0} evaluated in the latest ML run. Anomaly metrics are currently stale.
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={handleRunPipeline} 
+              disabled={runningMl}
+              className="btn btn-primary"
+              style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem', backgroundColor: '#d97706', borderColor: '#d97706' }}
+            >
+              {runningMl ? "Refreshing..." : "Re-run Detection"}
+            </button>
+          </div>
+        )}
 
         {/* KPI Grid */}
         <div className="grid-4">

@@ -67,9 +67,14 @@ class UploadResponse(BaseModel):
     status: str
     message: str
     records_processed: int
+    records_received: Optional[int] = 0
+    records_inserted: Optional[int] = 0
+    duplicates_skipped: Optional[int] = 0
+    invalid_records_skipped: Optional[int] = 0
     students_count: int
     subjects_count: int
     sample_records: List[Dict[str, Any]] = []
+    warnings: List[str] = []
 
 class DetectionRequest(BaseModel):
     contamination: Optional[float] = 0.10
@@ -87,6 +92,11 @@ class DashboardStats(BaseModel):
     total_students: int
     total_subjects: int
     total_records: int
+    analyzed_records: Optional[int] = 0
+    is_stale: Optional[bool] = False
+    detection_status: Optional[str] = "Up to date"
+    last_detection_date: Optional[str] = None
+    ranking_criterion: Optional[str] = "anomaly_frequency"
     present_records: int
     absent_records: int
     normal_records: int

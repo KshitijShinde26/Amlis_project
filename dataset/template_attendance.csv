@@ -1,0 +1,11 @@
+student_id,student_name,date,time,subject_code,subject_name,status
+STU001,Rahul Sharma,2026-08-03,10:00,IT601,Applied Machine Learning,Present
+STU002,Priya Patel,2026-08-03,10:00,IT601,Applied Machine Learning,Present
+STU003,Amit Verma,2026-08-03,10:00,IT601,Applied Machine Learning,Absent
+STU004,Sneha Joshi,2026-08-03,10:00,IT601,Applied Machine Learning,Present
+STU005,Vikram Singh,2026-08-03,10:00,IT601,Applied Machine Learning,Present
+STU001,Rahul Sharma,2026-08-04,11:30,IT602,Web Technologies & Frameworks,Present
+STU002,Priya Patel,2026-08-04,11:30,IT602,Web Technologies & Frameworks,Absent
+STU003,Amit Verma,2026-08-04,11:30,IT602,Web Technologies & Frameworks,Present
+STU004,Sneha Joshi,2026-08-04,11:30,IT602,Web Technologies & Frameworks,Present
+STU005,Vikram Singh,2026-08-04,11:30,IT602,Web Technologies & Frameworks,Late
